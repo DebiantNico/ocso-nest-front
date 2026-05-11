@@ -1,12 +1,14 @@
 import type { Config } from 'tailwindcss'
+// 1. Agregamos esta importación que faltaba:
+import { nextui } from "@nextui-org/react";
 
 const config: Config = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
-    './node_modules/@nextui-org/theme/dist**/*.{js,ts,jsx,tsx}',
-    './node_modules/nextui- '
+    // 2. Corregimos la ruta de NextUI (le faltaba un slash /):
+    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {
@@ -17,6 +19,9 @@ const config: Config = {
       },
     },
   },
+  darkMode: "class",
+  // 3. Ahora que está importado arriba, esto ya no dará error:
   plugins: [nextui()],
 }
+
 export default config
