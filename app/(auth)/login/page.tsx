@@ -1,23 +1,34 @@
 "use client"
 import { API_URL } from "@/constants";
-import { Input, Button } from "@nextui-org/react";
+import { Input, Button, Spinner } from "@nextui-org/react";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
 export default function LoginPage() {
   
+  const [submitting, setSubmitting] = useState(false);
+  const router = useRouter();
   const handlleSubmit = async (e: React.FormEvent) => {
+    setSubmitting(true);
     e.preventDefault();
     const formData = new FormData(e.target);
     let authData: any = {}
     authData.userEmail = formData.get("userEmail");
     authData.userPassword = formData.get("userPassword");
 
-    const { data } = await axios.post(`${API_URL}/auth/login`, {
+    try {
+    const response = await axios.post(`${API_URL}/auth/login`, {
       ...authData
     }, {
       withCredentials: true,
     });
-    console.log(data);
+    if (response.status === 201) router.push("/dashboard");
+    setSubmitting(false)
+  } catch (e) {
+    setSubmitting(false);
+  }
     return;
   };
   return (
@@ -30,8 +41,8 @@ export default function LoginPage() {
       </div>
       
       <div className="flex flex-col items-center gap-2">
-        <Button color="primary" type="submit">
-          Iniciar sesión
+        <Button color="primary" type="submit" disabled={submitting}>
+          {submitting ? "Enviando..." : "Iniciar sesión"}
         </Button>
         <p className="text-white">
           ¿No tienes cuenta? <Link href="/signup" className="text-red-600 underline">Regístrate</Link>
