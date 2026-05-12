@@ -14,6 +14,8 @@ export default function LoginPage() {
 
     const { data } = await axios.post(`${API_URL}/auth/login`, {
       ...authData
+    }, {
+      withCredentials: true,
     });
     console.log(data);
     return;
